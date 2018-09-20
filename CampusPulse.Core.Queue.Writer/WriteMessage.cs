@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace CampusPulse.Core.Queue
 {
@@ -12,7 +13,8 @@ namespace CampusPulse.Core.Queue
     {
         private readonly Dictionary<string, object> config;
         private readonly string topic;
-        public WriteMessage(Dictionary<string, object> config , string topic)
+        //private readonly ILogger logger;
+        public WriteMessage(Dictionary<string, object> config, string topic)
         {
             this.config = config;
             this.topic = topic;
@@ -28,7 +30,7 @@ namespace CampusPulse.Core.Queue
             using (var producer = new Producer<Null, string>(config, null, new StringSerializer(Encoding.UTF8)))
             {
                 var dr = producer.ProduceAsync(topic, null, JsonConvert.SerializeObject(message)).Result;
-                Console.WriteLine($"Delivered '{dr.Value}' to: {dr.TopicPartitionOffset}");
+                Task.Run(() => Log.Information($"Delivered '{dr.Value}' to: {dr.TopicPartitionOffset}"));
             }
 
         }
@@ -42,7 +44,7 @@ namespace CampusPulse.Core.Queue
 
             using (var producer = new Producer<Null, string>(config, null, new StringSerializer(Encoding.UTF8)))
             {
-                return await  producer.ProduceAsync(topic, null, JsonConvert.SerializeObject(message));
+                return await producer.ProduceAsync(topic, null, JsonConvert.SerializeObject(message));
                 //Console.WriteLine($"Delivered '{dr.Value}' to: {dr.TopicPartitionOffset}");
             }
 
