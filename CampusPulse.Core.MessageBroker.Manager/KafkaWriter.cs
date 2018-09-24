@@ -9,18 +9,18 @@ using Serilog;
 
 namespace CampusPulse.Core.Queue
 {
-    public class WriteMessage<T> : IWriteMessage<T> where T : class
+    public class MessageWriter<T> : IMessageWriter<T> where T : class
     {
         private readonly Dictionary<string, object> config;
         private readonly string topic;
         //private readonly ILogger logger;
-        public WriteMessage(Dictionary<string, object> config, string topic)
+        public MessageWriter(Dictionary<string, object> config, string topic)
         {
             this.config = config;
             this.topic = topic;
 
         }
-        public void Put(T message, string topic)
+        public void Write(T message, string topic)
         {
             //var config = new Dictionary<string, object>
             //{
@@ -35,7 +35,7 @@ namespace CampusPulse.Core.Queue
 
         }
 
-        public async Task<Message<Null, string>> PutAsync(T message, string topic)
+        public async Task<Message<Null, string>> WriteAsync(T message, string topic)
         {
             //var config = new Dictionary<string, object>
             //{
