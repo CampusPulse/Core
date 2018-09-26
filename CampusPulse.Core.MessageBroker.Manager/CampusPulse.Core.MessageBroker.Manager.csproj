@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>atul sagar</Authors>
+    <Company>CampusPulse</Company>
+    <PackageId>CampusPulse.Core.MessageBroker.Manager</PackageId>
+    <Description>MessageBroker  Manager</Description>
   </PropertyGroup>
 
   <ItemGroup>
