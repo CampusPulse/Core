@@ -12,13 +12,11 @@ namespace CampusPulse.Core.Queue
     public class MessageWriter<T> : IMessageWriter<T> where T : class
     {
         private readonly Dictionary<string, object> config;
-        private readonly string topic;
+      
         //private readonly ILogger logger;
-        public MessageWriter(Dictionary<string, object> config, string topic)
+        public MessageWriter(Dictionary<string, object> config)
         {
             this.config = config;
-            this.topic = topic;
-
         }
         public void Write(T message, string topic)
         {
