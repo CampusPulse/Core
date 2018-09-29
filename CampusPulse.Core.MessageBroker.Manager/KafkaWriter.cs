@@ -9,12 +9,12 @@ using Serilog;
 
 namespace CampusPulse.Core.Queue
 {
-    public class MessageWriter<T> : IMessageWriter<T> where T : class
+    public class KafkaWriter<T> : IMessageWriter<T> where T : class
     {
         private readonly Dictionary<string, object> config;
       
         //private readonly ILogger logger;
-        public MessageWriter(Dictionary<string, object> config)
+        public KafkaWriter(Dictionary<string, object> config)
         {
             this.config = config;
         }
