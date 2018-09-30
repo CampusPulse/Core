@@ -20,11 +20,6 @@ namespace CampusPulse.Core.Queue
         }
         public void Write(T message, string topic)
         {
-            //var config = new Dictionary<string, object>
-            //{
-            //    { "bootstrap.servers", "localhost:9092" }
-            //};
-
             using (var producer = new Producer<Null, string>(config, null, new StringSerializer(Encoding.UTF8)))
             {
                 var dr = producer.ProduceAsync(topic, null, JsonConvert.SerializeObject(message)).Result;
