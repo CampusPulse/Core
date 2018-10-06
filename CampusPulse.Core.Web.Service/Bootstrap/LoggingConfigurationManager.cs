@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace CampusPulse.Core.Service.Bootstrap
 {
-    public class LoggingConfigurationManager
+    public static class LoggingConfigurationManager
     {
-        public static void ConfigureService(IServiceCollection services)
+        public static IServiceCollection AddServiceLogging(this IServiceCollection services)
         {
-            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+            return services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));            
         }
+      
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 
@@ -37,8 +38,19 @@ namespace CampusPulse.Core.Service.Configuration
         public virtual void ConfigureServices(IServiceCollection services)
         {
             MvcConfigurationManager.ConfigureService(services);
-            CacheConfigurationManager.ConfigureService(services, this.configuration);
-            LoggingConfigurationManager.ConfigureService(services);
+            CacheConfigurationManager.ConfigureService(services, this.configuration);          
+            services.AddServiceLogging();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "hello",//this.configuration.GetSection("service:title").ToString(),
+                    Description = "hello description",//this.configuration.GetSection("service:description").ToString(),
+                    TermsOfService = "None",
+                    Contact = new Contact() { Name = "{service.companyname}", Email = "{service.companyemail}", Url = "{service.companyemail}" }
+                });
+            });
             configureDependency(services);
             //services.AddSingleton<Serilog.ILogger, Serilog.Logger>();
 
@@ -74,7 +86,17 @@ namespace CampusPulse.Core.Service.Configuration
 
             ConfigureHttpsEndpoints(app, env);
 
-            app.UseMvc(routes => ConfigureRoutes(routes));
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("service-status", "service-status", defaults: new { controller = "Status", Action = "GetStatus" });
+                ConfigureRoutes(routes);
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Contacts API V1");
+            });
 
             if (env.IsDevelopment())
             {

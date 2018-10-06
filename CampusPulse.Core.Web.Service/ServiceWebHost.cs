@@ -26,15 +26,22 @@ namespace CampusPulse.Core.Service
 
             var elasticUri = config["ElasticConfiguration:Uri"];
 
-            return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Tstartup> ()
+           
+
+            var webHostBuilder = WebHost.CreateDefaultBuilder(args)
+
                 .UseContentRoot(baseRoot)
                 .UseKestrel(options =>
                 {
                     options.ConfigureEndpoints();
                 })
-                .UseConfiguration(config)
-                .Build();
+                .UseConfiguration(config);
+
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                webHostBuilder.UseUrls("https://local.dev.campuspulse.com:44340");
+            }
+            return webHostBuilder.UseStartup<Tstartup>().Build();
         }
     }
 }
